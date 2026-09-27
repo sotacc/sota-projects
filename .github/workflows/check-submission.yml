@@ -1,0 +1,27 @@
+name: Check project submission
+on:
+  issues:
+    types: [opened, edited, reopened]
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: submission-${{ github.event.issue.number }}
+  cancel-in-progress: false
+jobs:
+  check:
+    if: startsWith(github.event.issue.title, '[Project]') && !github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      # Only trusted intake code and Node built-ins; no submitted code is cloned or run.
+      - run: node scripts/submissions/check-issue.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}

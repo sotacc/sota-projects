@@ -1,0 +1,86 @@
+name: Submit a project
+description: Suggest a useful open-source project for the SOTA collection.
+title: "[Project] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us what the project solves and why it belongs in SOTA.
+        Submissions are public. Do not include private information.
+        Automated checks assist a maintainer; passing them does not guarantee inclusion.
+  - type: input
+    id: repo
+    attributes:
+      label: GitHub repository
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+  - type: textarea
+    id: purpose
+    attributes:
+      label: What does it do?
+      description: One plain-text sentence, 5–200 characters.
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why is it worth including?
+      description: Intended audience, distinctive benefits and known limitations; 5–600 characters, without Markdown headings.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence links
+      description: 1–3 HTTPS links to the README, documentation or demo, one per line.
+    validations:
+      required: true
+  - type: input
+    id: website
+    attributes:
+      label: Project website
+      description: "Optional. The official project website."
+      placeholder: "https://example.com"
+    validations:
+      required: false
+  - type: input
+    id: documentation
+    attributes:
+      label: Documentation
+      description: "Optional. Official documentation."
+      placeholder: "https://docs.example.com"
+    validations:
+      required: false
+  - type: input
+    id: demo
+    attributes:
+      label: Demo
+      description: "Optional. A demo maintained by the project."
+      placeholder: "https://demo.example.com"
+    validations:
+      required: false
+  - type: input
+    id: x
+    attributes:
+      label: Official X profile
+      description: "Optional. Project profile only; put posts in Evidence links."
+      placeholder: "https://x.com/username"
+    validations:
+      required: false
+  - type: input
+    id: discord
+    attributes:
+      label: Discord
+      description: "Optional. The official community invitation."
+      placeholder: "https://discord.gg/invite-code"
+    validations:
+      required: false
+  - type: textarea
+    id: customLinks
+    attributes:
+      label: Other project links
+      description: "Optional. One per line: Label | HTTPS URL. Maximum 10 project links in total."
+      placeholder: "YouTube | https://www.youtube.com/@your-project"
+    validations:
+      required: false
