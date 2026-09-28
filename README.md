@@ -47,7 +47,7 @@ Passing automated checks does not guarantee inclusion. Checks do not execute sub
 
 Open an Issue describing the affected project and the correction or suggestion. Project submissions belong in Issues, rather than code pull requests. This repository is the community intake for SOTA; it is not a downloadable catalog dataset.
 
-The new SOTA site is being prepared for launch. Submission review can begin before publication; accepted submissions may remain open until the site is live.
+Browse the collection at **[sota.cc](https://sota.cc/)**. Accepted submissions remain open until editorial review and deployment are complete. Publication acknowledgements are currently handled by maintainers.
 
 ## What are these directories for?
 
@@ -57,7 +57,7 @@ The new SOTA site is being prepared for launch. Submission review can begin befo
 | `.github/workflows/` | Runs automated checks when a project Issue is opened, edited, or reopened |
 | `scripts/submissions/` | Reads the Issue and repository metadata, then posts or updates check feedback |
 | `src/lib/` | Shared validation rules for submission fields and project links; this is not a website frontend |
-| `config/` | The submission repository name and, once the new site is deployed, its public catalog origin |
+| `config/` | The submission repository name and its public catalog origin |
 | `examples/` | Documentation samples only; these are not live submissions or the project dataset |
 
 GitHub Issues can receive submissions without these code directories. They are included to provide the current automated checks: the workflow imports the scripts, shared validation modules, and configuration. Keep them together if those checks are enabled. Contributors only need the submission form and Issues tab.
