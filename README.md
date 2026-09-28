@@ -11,9 +11,12 @@ Open a **[Project]** Issue using the submission template. Tell us:
 - Where the source code lives on GitHub.
 - What the project does and who it helps.
 - Why it is worth including, with supporting links.
+- Optionally, a direct HTTPS link to its official logo (PNG, JPEG or WebP, up to 2 MB). Leave it blank to use the GitHub repository owner's avatar.
 - Optionally, its official website, documentation, demo, X profile, Discord, or other project links.
 
 Check existing Issues first. To add information or correct a submission, edit the original Issue instead of creating a duplicate. Submissions and discussions are public; leave out private information.
+
+Logos are reviewed and stored with the website before publication. You do not need to upload an image file or open a pull request in this repository.
 
 ## Example submission
 

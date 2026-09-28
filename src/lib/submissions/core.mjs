@@ -28,8 +28,16 @@ export function repositoryName(value) {
   const url = normalizeRepository(value);
   return url ? new URL(url).pathname.slice(1) : null;
 }
+export function normalizeLogoUrl(value) {
+  if (typeof value !== "string" || value.length > 1000 || !/^https:\/\//i.test(value) || /[\s\\\u0000-\u001f\u007f]/u.test(value)) throw new Error("Logo: use a direct HTTPS image URL (up to 1000 characters).");
+  let url;
+  try { url = new URL(value); } catch { throw new Error("Logo: enter a valid HTTPS image URL."); }
+  if (url.username || url.password || url.hash) throw new Error("Logo: remove credentials and fragments from the image URL.");
+  if (/\.svg$/i.test(url.pathname)) throw new Error("Logo: use PNG, JPEG or WebP. Export an SVG logo to PNG first.");
+  return url.href;
+}
 export const fieldLabels = {
-  repo: "GitHub repository", purpose: "What does it do?", reason: "Why is it worth including?", evidence: "Evidence links",
+  repo: "GitHub repository", purpose: "What does it do?", reason: "Why is it worth including?", evidence: "Evidence links", logo: "Project logo",
   website: "Project website", documentation: "Documentation", demo: "Demo", x: "Official X profile", discord: "Discord", customLinks: "Other project links",
 };
 const optionalLinkFields = ["website", "documentation", "demo", "x", "discord", "customLinks"];
@@ -60,6 +68,8 @@ export function validateSubmission(input) {
     try { const url = new URL(link); return url.protocol !== "https:" || !!url.username || !!url.password; } catch { return true; }
   })) errors.evidence = "Add 1–3 HTTPS links to a README, documentation, or a demo.";
   else values.evidence = links.join("\n");
+  if (!values.logo || values.logo === "_No response_") delete values.logo;
+  else { try { values.logo = normalizeLogoUrl(values.logo); } catch (error) { errors.logo = error.message; } }
   for (const key of optionalLinkFields) {
     if (!values[key] || values[key] === "_No response_") { delete values[key]; continue; }
     if (key === "customLinks") continue;

@@ -37,6 +37,14 @@ body:
     validations:
       required: true
   - type: input
+    id: logo
+    attributes:
+      label: Project logo
+      description: "Optional. Direct HTTPS URL to the official logo (PNG, JPEG or WebP, up to 2 MB). Leave blank to use the GitHub owner's avatar. Images are reviewed and stored before publication."
+      placeholder: "https://example.com/logo.png"
+    validations:
+      required: false
+  - type: input
     id: website
     attributes:
       label: Project website

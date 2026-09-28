@@ -2,7 +2,9 @@
 
 This is an example of a completed submission, not a live Issue. **LangChain is already in the SOTA collection; do not submit it again.** Use this as a guide when suggesting a different project.
 
-On GitHub, choose **Submit a project**, set the title to `[Project] your-project-name`, and fill in the fields below with your project's information. GitHub will store the completed fields in the Issue body. The first four fields are required. Project links are optional; Demo and Discord are omitted here because a submission does not need every link type.
+On GitHub, choose **Submit a project**, set the title to `[Project] your-project-name`, and fill in the fields below with your project's information. GitHub will store the completed fields in the Issue body. The first four fields are required. Project logo and project links are optional; Demo and Discord are omitted here because a submission does not need every link type.
+
+Leave **Project logo** blank to use the GitHub repository owner's avatar. This example shows GitHub's `_No response_` placeholder for an empty field; you do not need to type it. To provide a specific logo, enter a direct HTTPS PNG, JPEG or WebP image URL (up to 2 MB). A maintainer reviews and stores it locally before publication.
 
 The repository, overview and resource links below can be checked in the [LangChain README](https://github.com/langchain-ai/langchain) and [official documentation](https://docs.langchain.com/oss/python/langchain/overview). Its X profile is linked by the official documentation. Project links are maintained by the project; evidence explains or supports the recommendation. Third-party articles and X posts belong under **Evidence links**, not **Official X profile**.
 
@@ -22,6 +24,10 @@ Useful for developers who need reusable model integrations and agent-building co
 
 https://github.com/langchain-ai/langchain
 https://docs.langchain.com/oss/python/langchain/overview
+
+### Project logo
+
+_No response_
 
 ### Project website
 
