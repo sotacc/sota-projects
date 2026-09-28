@@ -1,6 +1,6 @@
 # SOTA Projects
 
-Recommend useful open-source projects for **SOTA**, and help improve the collection.
+Showcase AI products, apps and tools on **SOTA**, and help improve the collection. Commercial products and open-source projects are both welcome.
 
 **[Suggest a project](https://github.com/sotacc/sota-projects/issues/new?template=project.yml)** · **[View an example](examples/project-submission.md)** · **[Browse submissions](https://github.com/sotacc/sota-projects/issues)** · **[Share feedback](https://github.com/sotacc/sota-projects/issues/new)**
 
@@ -8,17 +8,19 @@ Recommend useful open-source projects for **SOTA**, and help improve the collect
 
 Open a **[Project]** Issue using the submission template. Tell us:
 
-- Where the source code lives on GitHub.
+- The product name and official website. A public GitHub repository is optional; repository-only submissions are also supported.
 - What the project does and who it helps.
 - Why it is worth including, with supporting links.
-- Optionally, a direct HTTPS link to its official logo (PNG, JPEG or WebP, up to 2 MB). Leave it blank to use the GitHub repository owner's avatar.
-- Optionally, its official website, documentation, demo, X profile, Discord, or other project links.
+- Optionally, a direct HTTPS link to its official logo (PNG, JPEG or WebP, up to 2 MB). Leave it blank for a default icon, or the GitHub repository owner’s avatar when available.
+- Optionally, its documentation, demo, X profile, Discord, or other project links.
 
 Check existing Issues first. To add information or correct a submission, edit the original Issue instead of creating a duplicate. Submissions and discussions are public; leave out private information.
 
 Logos are reviewed and stored with the website before publication. You do not need to upload an image file or open a pull request in this repository.
 
-## Example submission
+## Example submissions
+
+See the [website-only product example](examples/website-only-submission.md) for a product with no public source code. It is fictional and is not a live submission.
 
 Read the [LangChain submission example](examples/project-submission.md) to see a completed submission, including official project links and supporting evidence. LangChain is already listed; the file is a writing guide, not a new submission. Use the **Suggest a project** button for a different project.
 
@@ -37,7 +39,7 @@ You do not need to clone this repository, edit files, or open a pull request to 
 
 ## What happens next
 
-1. Automated checks validate the required fields, links, and public repository metadata.
+1. Automated checks validate the required fields, links, and public repository metadata when a repository is provided. Submitted websites are not automatically fetched.
 2. A maintainer assesses the project's purpose, evidence, and fit for the collection.
 3. Accepted candidates enter editorial review. Once a project is reviewed, published, and confirmed on the live site, its Issue receives a link and is closed.
 

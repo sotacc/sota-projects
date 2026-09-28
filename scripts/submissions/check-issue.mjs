@@ -30,7 +30,7 @@ export async function checkEvent(event, config, { api = github, fetchCatalog = f
   if (fresh.state !== "open" || bodyHash(fresh.body) !== bodyHash(issue.body)) return "changed; no feedback posted";
   const marker = "<!-- sota-submission-check -->";
   const comment = result
-    ? `${marker}\nThanks for suggesting a project. The repository and required fields passed the initial checks. ${duplicateNote}\n\n${result.repo.archived ? "The repository is archived. " : ""}${result.repo.fork ? "This is a fork. " : ""}A maintainer will assess its purpose, evidence, and fit before inclusion. These checks do not run the project or verify its claims. This Issue remains open until review and publication.`
+    ? `${marker}\nThanks for suggesting a project. The submission fields and any supplied repository metadata passed the initial checks. ${duplicateNote}\n\n${result.repo?.archived ? "The repository is archived. " : ""}${result.repo?.fork ? "This is a fork. " : ""}A maintainer will assess its purpose, evidence, and fit before inclusion. These checks do not run the project or verify its claims. This Issue remains open until review and publication.`
     : `${marker}\nThis submission needs attention:\n\n${problem}\n\nPlease edit the Issue using the project template. Checks run again when the Issue is edited; nothing has been published.`;
   const comments = await api(`/repos/${target}/issues/${issue.number}/comments?per_page=100`);
   const prior = comments.find(item => item.user?.login === "github-actions[bot]" && item.body?.includes(marker));

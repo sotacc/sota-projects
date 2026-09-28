@@ -37,7 +37,7 @@ export function normalizeLogoUrl(value) {
   return url.href;
 }
 export const fieldLabels = {
-  repo: "GitHub repository", purpose: "What does it do?", reason: "Why is it worth including?", evidence: "Evidence links", logo: "Project logo",
+  name: "Product name", repo: "GitHub repository", purpose: "What does it do?", reason: "Why is it worth including?", evidence: "Evidence links", logo: "Project logo",
   website: "Project website", documentation: "Documentation", demo: "Demo", x: "Official X profile", discord: "Discord", customLinks: "Other project links",
 };
 const optionalLinkFields = ["website", "documentation", "demo", "x", "discord", "customLinks"];
@@ -55,9 +55,11 @@ export function submissionProjectLinks(values) {
 export function validateSubmission(input) {
   const values = Object.fromEntries(Object.keys(fieldLabels).map(key => [key, typeof input?.[key] === "string" ? input[key].trim() : ""]));
   const errors = {};
+  for (const key of ["repo", "name"]) if (!values[key] || values[key] === "_No response_") delete values[key];
+  if (values.name && (Array.from(values.name).length > 100 || /[\u0000-\u001f\u007f]/u.test(values.name) || /^#{1,6}\s/.test(values.name))) errors.name = "Use a plain-text product name of up to 100 characters.";
   const normalized = normalizeRepository(values.repo);
-  if (!normalized) errors.repo = "Enter a GitHub repository URL or owner/repo.";
-  else values.repo = normalized;
+  if (values.repo && !normalized) errors.repo = "Enter a GitHub repository URL or owner/repo.";
+  else if (normalized) values.repo = normalized;
   for (const [key, limit] of [["purpose", 200], ["reason", 600]]) {
     if (values[key].replace(/\s/g, "").length < 5) errors[key] = "Please add at least 5 characters.";
     else if (Array.from(values[key]).length > limit) errors[key] = `Use at most ${limit} characters.`;
@@ -66,7 +68,7 @@ export function validateSubmission(input) {
   const links = values.evidence.split(/\s+/).filter(Boolean);
   if (!links.length || links.length > 3 || values.evidence.length > 1000 || links.some(link => {
     try { const url = new URL(link); return url.protocol !== "https:" || !!url.username || !!url.password; } catch { return true; }
-  })) errors.evidence = "Add 1–3 HTTPS links to a README, documentation, or a demo.";
+  })) errors.evidence = "Add 1–3 HTTPS links to an official website, documentation, or a demo.";
   else values.evidence = links.join("\n");
   if (!values.logo || values.logo === "_No response_") delete values.logo;
   else { try { values.logo = normalizeLogoUrl(values.logo); } catch (error) { errors.logo = error.message; } }
@@ -79,6 +81,10 @@ export function validateSubmission(input) {
   if (values.customLinks?.length > 6000) errors.customLinks = "Use at most 6000 characters for custom links.";
   if (!optionalLinkFields.some(key => errors[key])) {
     try { submissionProjectLinks(values); } catch (error) { errors.customLinks = error.message; }
+  }
+  if (!values.repo) {
+    if (!values.name) errors.name = "Enter the product name.";
+    if (!values.website) errors.website = "Add an official website, or provide a public GitHub repository.";
   }
   return { values, errors };
 }
@@ -106,7 +112,7 @@ export function createIssueUrl(target, values) {
   const checked = validateSubmission(values);
   if (Object.keys(checked.errors).length) throw new Error("Fix the submission fields before continuing.");
   const url = new URL(`https://github.com/${repo}/issues/new`);
-  url.searchParams.set("title", `[Project] ${checked.values.repo.split("/").pop()}`);
+  url.searchParams.set("title", `[Project] ${checked.values.name || checked.values.repo.split("/").pop()}`);
   url.searchParams.set("body", submissionBody(checked.values));
   // Labels are deliberately omitted: public contributors cannot assign them.
   // Fall back to copying the draft rather than sending an oversized request URL.
@@ -122,4 +128,17 @@ export function validateConfig(config) {
     if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) throw new Error("Site URL must be an HTTPS origin without credentials, paths or queries.");
   }
   return config;
+}
+
+/** URL identity preserves product paths and meaningful queries; fragments and tracking do not identify products. */
+export function websiteIdentity(value) {
+  const normalized = normalizeProjectLinks([{ type: "website", url: value }])[0].url;
+  const url = new URL(normalized);
+  url.hash = "";
+  for (const key of [...url.searchParams.keys()]) if (/^utm_/i.test(key) || ["gclid", "fbclid"].includes(key)) url.searchParams.delete(key);
+  url.searchParams.sort();
+  return url.href.replace(/\/(?=\?|$)/, "");
+}
+export function projectWebsite(project) {
+  return project.websiteUrl ?? project.links?.find(link => link.type === "website")?.url ?? null;
 }

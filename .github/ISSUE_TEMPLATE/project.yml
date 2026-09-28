@@ -1,20 +1,37 @@
 name: Submit a project
-description: Suggest a useful open-source project for the SOTA collection.
+description: Suggest an AI product, app or tool for the SOTA collection.
 title: "[Project] "
 body:
   - type: markdown
     attributes:
       value: |
+        Commercial products and open-source tools are welcome. No public source code is required.
         Tell us what the project solves and why it belongs in SOTA.
         Submissions are public. Do not include private information.
         Automated checks assist a maintainer; passing them does not guarantee inclusion.
   - type: input
+    id: name
+    attributes:
+      label: Product name
+      description: "The name people will recognize (up to 100 characters)."
+    validations:
+      required: true
+  - type: input
+    id: website
+    attributes:
+      label: Project website
+      description: "Official HTTPS website. Required when no GitHub repository is provided."
+      placeholder: "https://example.com"
+    validations:
+      required: false
+  - type: input
     id: repo
     attributes:
       label: GitHub repository
+      description: "Optional. Public GitHub URL, if available. You do not need to open-source your product."
       placeholder: https://github.com/owner/repo
     validations:
-      required: true
+      required: false
   - type: textarea
     id: purpose
     attributes:
@@ -33,23 +50,15 @@ body:
     id: evidence
     attributes:
       label: Evidence links
-      description: 1–3 HTTPS links to the README, documentation or demo, one per line.
+      description: 1–3 HTTPS links to the official website, documentation or demo, one per line.
     validations:
       required: true
   - type: input
     id: logo
     attributes:
       label: Project logo
-      description: "Optional. Direct HTTPS URL to the official logo (PNG, JPEG or WebP, up to 2 MB). Leave blank to use the GitHub owner's avatar. Images are reviewed and stored before publication."
+      description: "Optional. Direct HTTPS URL to the official logo (PNG, JPEG or WebP, up to 2 MB). Leave blank for a default icon, or the GitHub owner's avatar if a repository is provided. Images are reviewed and stored before publication."
       placeholder: "https://example.com/logo.png"
-    validations:
-      required: false
-  - type: input
-    id: website
-    attributes:
-      label: Project website
-      description: "Optional. The official project website."
-      placeholder: "https://example.com"
     validations:
       required: false
   - type: input
