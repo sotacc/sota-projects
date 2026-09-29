@@ -130,3 +130,31 @@ body:
       placeholder: "YouTube | https://www.youtube.com/@your-project"
     validations:
       required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Product screenshots
+      description: "Optional. Up to 5 images you have permission to publish. Each PNG/JPEG/WebP, up to 2 MB. One per line: Caption | HTTPS image URL. Requires maintainer review."
+    validations:
+      required: false
+  - type: input
+    id: makerName
+    attributes:
+      label: Maker name
+      description: "Optional public name. Complete all maker fields if adding an introduction."
+    validations:
+      required: false
+  - type: textarea
+    id: makerIntro
+    attributes:
+      label: Maker introduction
+      description: "Optional. One paragraph, up to 1,200 characters: why you built it and what feedback you want. Requires identity review."
+    validations:
+      required: false
+  - type: input
+    id: makerProfile
+    attributes:
+      label: Maker GitHub profile
+      description: "Optional. Your personal https://github.com/username profile. Maker status is granted only after verification."
+    validations:
+      required: false

@@ -75,3 +75,9 @@ Install the [SOTA Agent Skill](https://sota.cc/agent-skill/) and ask: “Submit 
 For an existing published product, use **[Update a published product](https://github.com/sotacc/sota-projects/issues/new?template=update.yml)**. The skill prepares a JSON change request with the exact product ID and current revision from `projects.json`. Omitted fields are preserved; arrays replace their entire field. Provide official evidence and describe your relationship honestly. Anyone may propose corrections; a maker/team claim is not ownership verification.
 
 Checks rerun when an Issue is edited. A stale revision requires comparing your changes against the latest listing again. Updates require maintainer review, a draft PR and deployment; they never directly overwrite a live listing. Domain or repository migrations should be raised as a general Issue for a maintainer. The original listing stays live while an update is reviewed.
+
+### Screenshots and maker introductions
+
+These are optional. On the submission page, expand **Screenshots & maker introduction**. Add up to five image URLs with captions, and optionally your public name, a short introduction and personal GitHub profile. Images and maker identity require maintainer review; ordinary submissions can still use automated review.
+
+For an existing listing, use **Add to this page** on its SOTA product page to open a `[Showcase]` request. Provide official evidence connecting the maker to the product. Do not include private information. A Maker badge is granted only after verification; declaring yourself the maker is not sufficient.

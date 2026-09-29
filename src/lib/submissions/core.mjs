@@ -37,10 +37,22 @@ export function normalizeLogoUrl(value) {
   return url.href;
 }
 export const fieldLabels = {
+  screenshots: "Product screenshots", makerName: "Maker name", makerIntro: "Maker introduction", makerProfile: "Maker GitHub profile",
   name: "Product name", repo: "GitHub repository", purpose: "Summary", tags: "Tags", problem: "Problem it solves", audience: "Who is it for?", reason: "Why is it useful?", limitations: "Known limitations", evidence: "Evidence links", logo: "Project logo",
   website: "Project website", documentation: "Documentation", demo: "Demo", x: "Official X profile", discord: "Discord", customLinks: "Other project links",
 };
 const optionalLinkFields = ["website", "documentation", "demo", "x", "discord", "customLinks"];
+export function submissionScreenshots(value) {
+  if (!value || value === "_No response_") return [];
+  if (typeof value !== "string" || value.length > 6000) throw new Error("Use up to 5 screenshots: Caption | https://example.com/image.png");
+  const lines = value.split(/\r?\n/).filter(line => line.trim());
+  if (lines.length > 5) throw new Error("Use up to 5 screenshots.");
+  return lines.map(line => {
+    const parts = line.split("|").map(part => part.trim());
+    if (parts.length !== 2 || !parts[0] || parts[0].length > 120 || /[\u0000-\u001f\u007f]/u.test(parts[0])) throw new Error("Use one screenshot per line: Caption (up to 120 characters) | HTTPS image URL");
+    return { caption: parts[0], sourceUrl: normalizeLogoUrl(parts[1]) };
+  });
+}
 /** @param {string | undefined} value @param {{id: string}[]} [allowedTags] */
 export function submissionTags(value, allowedTags) {
   if (!value || value === "_No response_") return [];
@@ -64,6 +76,12 @@ export function submissionProjectLinks(values) {
 export function validateSubmission(input) {
   const values = Object.fromEntries(Object.keys(fieldLabels).map(key => [key, typeof input?.[key] === "string" ? input[key].trim() : ""]));
   const errors = {};
+  for (const key of ["screenshots", "makerName", "makerIntro", "makerProfile"]) if (!values[key] || values[key] === "_No response_") delete values[key];
+  try { submissionScreenshots(values.screenshots); } catch (error) { errors.screenshots = error.message; }
+  if (["makerName", "makerIntro", "makerProfile"].some(key => values[key])) {
+    for (const [key, max] of [["makerName",80],["makerIntro",1200]]) if (!values[key] || values[key].length > max || /[\u0000-\u001f\u007f]/u.test(values[key]) || /^#{1,6}\s/.test(values[key])) errors[key] = `Use plain text of 1–${max} characters.`;
+    if (!/^https:\/\/github\.com\/[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?\/?$/i.test(values.makerProfile ?? "")) errors.makerProfile = "Add your personal GitHub profile, for example https://github.com/yourname. Maker status requires verification.";
+  }
   try {
     const tags = submissionTags(values.tags);
     if (tags.length) values.tags = tags.join(", ");
