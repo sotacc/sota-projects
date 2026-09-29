@@ -39,6 +39,14 @@ body:
       description: One plain-text sentence, 5–200 characters.
     validations:
       required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: "Optional. Choose up to 3 existing tag IDs at https://sota.cc/submit/, separated by commas. Tags are checked during review."
+      placeholder: "search-retrieval, database-tools, mcp"
+    validations:
+      required: false
   - type: textarea
     id: problem
     attributes:

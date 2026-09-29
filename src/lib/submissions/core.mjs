@@ -37,10 +37,19 @@ export function normalizeLogoUrl(value) {
   return url.href;
 }
 export const fieldLabels = {
-  name: "Product name", repo: "GitHub repository", purpose: "Summary", problem: "Problem it solves", audience: "Who is it for?", reason: "Why is it useful?", limitations: "Known limitations", evidence: "Evidence links", logo: "Project logo",
+  name: "Product name", repo: "GitHub repository", purpose: "Summary", tags: "Tags", problem: "Problem it solves", audience: "Who is it for?", reason: "Why is it useful?", limitations: "Known limitations", evidence: "Evidence links", logo: "Project logo",
   website: "Project website", documentation: "Documentation", demo: "Demo", x: "Official X profile", discord: "Discord", customLinks: "Other project links",
 };
 const optionalLinkFields = ["website", "documentation", "demo", "x", "discord", "customLinks"];
+/** @param {string | undefined} value @param {{id: string}[]} [allowedTags] */
+export function submissionTags(value, allowedTags) {
+  if (!value || value === "_No response_") return [];
+  if (typeof value !== "string" || value.length > 300) throw new Error("Choose up to 3 tags from the submission page.");
+  const tags = [...new Set(value.split(/[,\r\n]+/).map(tag => tag.trim()).filter(Boolean))];
+  if (!tags.length || tags.length > 3 || tags.some(tag => tag.length > 80 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag))) throw new Error("Use up to 3 tag IDs, separated by commas or new lines.");
+  if (allowedTags && tags.some(tag => !allowedTags.some(item => item.id === tag))) throw new Error("Unknown tag. Choose existing tags from https://sota.cc/submit/.");
+  return tags;
+}
 export function submissionProjectLinks(values) {
   const links = ["website", "documentation", "demo", "x", "discord"].filter(type => values[type]).map(type => ({ type, url: values[type] }));
   if (values.customLinks) {
@@ -55,6 +64,11 @@ export function submissionProjectLinks(values) {
 export function validateSubmission(input) {
   const values = Object.fromEntries(Object.keys(fieldLabels).map(key => [key, typeof input?.[key] === "string" ? input[key].trim() : ""]));
   const errors = {};
+  try {
+    const tags = submissionTags(values.tags);
+    if (tags.length) values.tags = tags.join(", ");
+    else delete values.tags;
+  } catch (error) { errors.tags = error.message; }
   for (const key of ["repo", "name"]) if (!values[key] || values[key] === "_No response_") delete values[key];
   if (values.name && (Array.from(values.name).length > 100 || /[\u0000-\u001f\u007f]/u.test(values.name) || /^#{1,6}\s/.test(values.name))) errors.name = "Use a plain-text product name of up to 100 characters.";
   const normalized = normalizeRepository(values.repo);

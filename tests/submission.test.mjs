@@ -21,3 +21,12 @@ test('new and legacy headings preserve text, while duplicates and oversized list
   assert.throws(() => parseSubmission(body+'\n### What does it do?\nConflicting summary.'), /Duplicate/);
   assert.ok(validateSubmission({...values,audience:'x'.repeat(101)}).errors.audience);
 });
+
+
+test('tag IDs survive Markdown while malformed, oversized and duplicate sections fail', () => {
+  const values = { name: 'Example AI', website: 'https://example.org/', purpose: 'Search documents with AI.', tags: 'search-retrieval, mcp' };
+  assert.equal(parseSubmission(submissionBody(values)).tags, values.tags);
+  assert.equal(validateSubmission({ ...values, tags: 'mcp, mcp' }).values.tags, 'mcp');
+  for (const tags of ['one,two,three,four', '### Injected', 'a'.repeat(81)]) assert.ok(validateSubmission({ ...values, tags }).errors.tags);
+  assert.throws(() => parseSubmission(submissionBody(values)+'\n### Tags\ncoding-agent'), /Duplicate/);
+});
