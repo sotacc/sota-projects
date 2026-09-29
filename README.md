@@ -81,3 +81,9 @@ Checks rerun when an Issue is edited. A stale revision requires comparing your c
 These are optional. On the submission page, expand **Screenshots & maker introduction**. Add up to five image URLs with captions, and optionally your public name, a short introduction and personal GitHub profile. Images and maker identity require maintainer review; ordinary submissions can still use automated review.
 
 For an existing listing, use **Add to this page** on its SOTA product page to open a `[Showcase]` request. Provide official evidence connecting the maker to the product. Do not include private information. A Maker badge is granted only after verification; declaring yourself the maker is not sufficient.
+
+## Share a product release
+
+Once your maker profile has been verified, open your product page on [sota.cc](https://sota.cc), then **Product updates → Share a product update**. Add a title, release date, short explanation and official announcement URL. Review the draft and create its `[Release]` Issue using your verified GitHub account.
+
+SOTA checks authorship and the official announcement before publishing. Release requests are manually reviewed; they do not enter the new-product auto-merge queue. Publication does not change support votes or paid rankings. You can request maker verification through **Add to this page** first.

@@ -5,7 +5,7 @@ import { normalizeLogoUrl, submissionTags, websiteIdentity, projectWebsite } fro
 const fields = ["name", "category", "tags", "links", "summary", "problem", "audience", "whyRecommended", "limitations", "logo"];
 const canonical = value => JSON.stringify(value, (_, item) => item && typeof item === "object" && !Array.isArray(item) ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item);
 export function updateRevision(project) {
-  const snapshot = { id: project.id, slug: project.slug, name: project.name, repository: project.repository, category: project.category, tags: project.tags, links: project.links, avatar: new URL(project.avatar, "https://sota.cc").pathname, editorial: project.review.status === "reviewed" ? project.editorial : null, review: project.review, ...(project.screenshots ? { screenshots: project.screenshots } : {}), ...(project.maker ? { maker: project.maker } : {}) };
+  const snapshot = { id: project.id, slug: project.slug, name: project.name, repository: project.repository, category: project.category, tags: project.tags, links: project.links, avatar: new URL(project.avatar, "https://sota.cc").pathname, editorial: project.review.status === "reviewed" ? project.editorial : null, review: project.review, ...(project.screenshots ? { screenshots: project.screenshots } : {}), ...(project.maker ? { maker: project.maker } : {}), ...(project.releases ? { releases: project.releases } : {}) };
   return createHash("sha256").update(canonical(snapshot)).digest("hex");
 }
 function object(value, allowed) {
