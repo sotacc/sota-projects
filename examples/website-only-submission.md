@@ -10,10 +10,10 @@ Example Studio
 ### Project website
 https://example.com/
 
-### What does it do?
+### Summary
 Turns a team's meeting notes into a searchable workspace with AI summaries.
 
-### Why is it worth including?
+### Why is it useful?
 For small teams that want a hosted service without running their own infrastructure. Explain what distinguishes your product, its current pricing and limitations, and how submitted data is handled. Back up those claims with real documentation.
 
 ### Evidence links
@@ -29,3 +29,12 @@ https://example.com/docs
 ---
 
 The GitHub repository field can be left empty. The logo and documentation fields are optional. The product name and official website are required when no repository is supplied; the purpose, recommendation and evidence fields are always required. You still need a GitHub account to create the public Issue. Do not submit credentials or private code. Passing checks does not publish the product.
+
+### Problem it solves
+Finding answers across local files and databases can require switching between several tools.
+
+### Who is it for?
+Analysts working with local data
+
+### Known limitations
+_No response_

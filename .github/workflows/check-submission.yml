@@ -21,6 +21,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
+      - run: node --test tests/*.test.mjs
       # Only trusted intake code and Node built-ins; no submitted code is cloned or run.
       - run: node scripts/submissions/check-issue.mjs
         env:

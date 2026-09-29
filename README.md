@@ -63,3 +63,7 @@ Browse the collection at **[sota.cc](https://sota.cc/)**. Accepted submissions r
 | `examples/` | Documentation samples only; these are not live submissions or the project dataset |
 
 GitHub Issues can receive submissions without these code directories. They are included to provide the current automated checks: the workflow imports the scripts, shared validation modules, and configuration. Keep them together if those checks are enabled. Contributors only need the submission form and Issues tab.
+
+### Optional product details
+
+Start at [sota.cc/submit](https://sota.cc/submit/) with a product URL for an AI draft, or supply a name and summary yourself. Problem, audience, usefulness and documented limitations are optional, editable suggestions. The full Markdown draft includes these sections and the importer preserves them for review. Supporting sources default to the website or repository. Legacy Issue headings remain supported. Submission text does not grant publication approval.

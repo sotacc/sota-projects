@@ -37,7 +37,7 @@ export function normalizeLogoUrl(value) {
   return url.href;
 }
 export const fieldLabels = {
-  name: "Product name", repo: "GitHub repository", purpose: "What does it do?", reason: "Why is it worth including?", evidence: "Evidence links", logo: "Project logo",
+  name: "Product name", repo: "GitHub repository", purpose: "Summary", problem: "Problem it solves", audience: "Who is it for?", reason: "Why is it useful?", limitations: "Known limitations", evidence: "Evidence links", logo: "Project logo",
   website: "Project website", documentation: "Documentation", demo: "Demo", x: "Official X profile", discord: "Discord", customLinks: "Other project links",
 };
 const optionalLinkFields = ["website", "documentation", "demo", "x", "discord", "customLinks"];
@@ -60,16 +60,12 @@ export function validateSubmission(input) {
   const normalized = normalizeRepository(values.repo);
   if (values.repo && !normalized) errors.repo = "Enter a GitHub repository URL or owner/repo.";
   else if (normalized) values.repo = normalized;
-  for (const [key, limit] of [["purpose", 200], ["reason", 600]]) {
+  for (const [key, limit] of [["purpose", 200], ["problem", 600], ["audience", 600], ["reason", 600], ["limitations", 1000]]) {
+    if (key !== "purpose" && (!values[key] || values[key] === "_No response_")) { delete values[key]; continue; }
     if (values[key].replace(/\s/g, "").length < 5) errors[key] = "Please add at least 5 characters.";
     else if (Array.from(values[key]).length > limit) errors[key] = `Use at most ${limit} characters.`;
     else if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/u.test(values[key]) || /^#{1,6}\s/m.test(values[key])) errors[key] = "Use plain text without Markdown headings or control characters.";
   }
-  const links = values.evidence.split(/\s+/).filter(Boolean);
-  if (!links.length || links.length > 3 || values.evidence.length > 1000 || links.some(link => {
-    try { const url = new URL(link); return url.protocol !== "https:" || !!url.username || !!url.password; } catch { return true; }
-  })) errors.evidence = "Add 1–3 HTTPS links to an official website, documentation, or a demo.";
-  else values.evidence = links.join("\n");
   if (!values.logo || values.logo === "_No response_") delete values.logo;
   else { try { values.logo = normalizeLogoUrl(values.logo); } catch (error) { errors.logo = error.message; } }
   for (const key of optionalLinkFields) {
@@ -77,6 +73,18 @@ export function validateSubmission(input) {
     if (key === "customLinks") continue;
     try { values[key] = normalizeProjectLinks([{ type: key, url: values[key] }])[0].url; }
     catch (error) { errors[key] = error.message; }
+  }
+  if (!values.evidence || values.evidence === "_No response_") values.evidence = values.website || values.repo || "";
+  const links = values.evidence.split(/\s+/).filter(Boolean);
+  if (!links.length || links.length > 3 || values.evidence.length > 1000 || links.some(link => {
+    try { const url = new URL(link); return url.protocol !== "https:" || !!url.username || !!url.password; } catch { return true; }
+  })) errors.evidence = "Add 1–3 HTTPS links to an official website, documentation, or a demo.";
+  else values.evidence = links.join("\n");
+  for (const [key, max] of [["audience", 4], ["limitations", 5]]) {
+    if (!values[key]) continue;
+    const lines = submissionLines(values[key]);
+    if (!lines.length || lines.length > max || lines.some(line => Array.from(line).length > (key === "audience" ? 100 : 200))) errors[key] = `Use up to ${max} lines, each at most ${key === "audience" ? 100 : 200} characters.`;
+    else values[key] = lines.join("\n");
   }
   if (values.customLinks?.length > 6000) errors.customLinks = "Use at most 6000 characters for custom links.";
   if (!optionalLinkFields.some(key => errors[key])) {
@@ -88,13 +96,23 @@ export function validateSubmission(input) {
   }
   return { values, errors };
 }
+export function submissionLines(value) {
+  return [...new Set((value ?? "").split(/\r?\n/).map(line => line.replace(/^\s*[-*]\s+/, "").trim()).filter(Boolean))];
+}
+/** Submitted suggestions remain unreviewed until an independent editorial review. */
+export function submissionEditorial(values) {
+  return { summary: values.purpose || null, problem: values.problem || null, audience: submissionLines(values.audience), whyRecommended: values.reason || null, limitations: submissionLines(values.limitations) };
+}
 export function submissionBody(values) {
-  return Object.entries(fieldLabels).filter(([key]) => values[key]).map(([key, label]) => `### ${label}\n${values[key]}\n`).join("\n");
+  const visible = new Set(["purpose", "problem", "audience", "reason", "limitations"]);
+  return Object.entries(fieldLabels).filter(([key]) => values[key] || visible.has(key)).map(([key, label]) => `### ${label}\n${values[key] || "_No response_"}\n`).join("\n");
 }
 export function parseSubmission(body) {
   if (typeof body !== "string" || body.length > 20000) throw new Error("Submission is empty or too long.");
   const fields = {};
   const labels = new Map(Object.entries(fieldLabels).map(([key, value]) => [value, key]));
+  // Preserve old Issue Forms and reject mixed old/new duplicate headings.
+  for (const [label, key] of Object.entries({ "What does it do?": "purpose", "Why is it worth including?": "reason", "Problem": "problem", "Audience": "audience" })) labels.set(label, key);
   const sections = [...body.matchAll(/^### (.+)\r?\n([\s\S]*?)(?=^### |$(?![\s\S]))/gm)];
   for (const section of sections) {
     const key = labels.get(section[1].trim());
