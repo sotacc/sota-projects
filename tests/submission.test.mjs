@@ -30,3 +30,13 @@ test('tag IDs survive Markdown while malformed, oversized and duplicate sections
   for (const tags of ['one,two,three,four', '### Injected', 'a'.repeat(81)]) assert.ok(validateSubmission({ ...values, tags }).errors.tags);
   assert.throws(() => parseSubmission(submissionBody(values)+'\n### Tags\ncoding-agent'), /Duplicate/);
 });
+
+test('structured updates require a published revision and reject protected fields', async () => {
+  const { inspectUpdate } = await import('../src/lib/submissions/updates.mjs');
+  const project = { id: 'website:https://example.com', name: 'Example', updateRevision: 'a'.repeat(64), tags: [], links: [{ type: 'website', url: 'https://example.com/' }], editorial: { summary: 'Original summary.' } };
+  const value = { version: 1, projectId: project.id, baseRevision: project.updateRevision, changes: { summary: 'Updated product description.' }, reason: 'Official documentation changed.', evidence: ['https://example.com/'], relationship: 'community' };
+  const request = changes => ({ state: 'open', title: '[Update] Example', body: '### Update request\n```json\n' + JSON.stringify({ ...value, ...changes }) + '\n```' });
+  assert.equal(inspectUpdate(request({}), [project], { tags: [], categories: [] }).changes[0].before, 'Original summary.');
+  assert.throws(() => inspectUpdate(request({ baseRevision: 'b'.repeat(64) }), [project], { tags: [], categories: [] }), /listing changed/);
+  assert.throws(() => inspectUpdate(request({ changes: { publication: 'published' } }), [project], { tags: [], categories: [] }), /unknown field/);
+});

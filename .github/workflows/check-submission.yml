@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   check:
-    if: startsWith(github.event.issue.title, '[Project]') && !github.event.issue.pull_request
+    if: (startsWith(github.event.issue.title, '[Project]') || startsWith(github.event.issue.title, '[Update]')) && !github.event.issue.pull_request
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

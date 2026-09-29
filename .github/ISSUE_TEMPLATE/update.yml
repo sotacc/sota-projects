@@ -1,0 +1,20 @@
+name: Update a published product
+description: Propose corrections or new information for a product already on SOTA.
+title: "[Update] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ask your assistant to use the SOTA skill to update your listing: https://sota.cc/agent-skill/
+        It prepares a JSON change request from the current https://sota.cc/projects.json.
+        Paste that JSON below. Omitted fields stay unchanged; arrays replace their entire field.
+        Updates are public and require maintainer review. Claiming to be a maker does not verify ownership.
+        For domain or repository migrations, open a general Issue for a maintainer instead.
+  - type: textarea
+    id: update
+    attributes:
+      label: Update request
+      description: "JSON with version, projectId, baseRevision, changes, reason, evidence and relationship. See the skill for the exact format."
+      render: json
+    validations:
+      required: true

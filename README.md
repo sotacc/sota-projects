@@ -67,3 +67,11 @@ GitHub Issues can receive submissions without these code directories. They are i
 ### Optional product details
 
 Start at [sota.cc/submit](https://sota.cc/submit/) with a product URL for an AI draft, or supply a name and summary yourself. Problem, audience, usefulness and documented limitations are optional, editable suggestions. The full Markdown draft includes these sections and the importer preserves them for review. Supporting sources default to the website or repository. Legacy Issue headings remain supported. Submission text does not grant publication approval.
+
+## Submit or update with your assistant
+
+Install the [SOTA Agent Skill](https://sota.cc/agent-skill/) and ask: “Submit my product at https://example.com to SOTA” or “Update my SOTA listing from the latest official documentation.” Your assistant prepares the content and uses your GitHub login to create an Issue. No SOTA account or separate AI API key is needed.
+
+For an existing published product, use **[Update a published product](https://github.com/sotacc/sota-projects/issues/new?template=update.yml)**. The skill prepares a JSON change request with the exact product ID and current revision from `projects.json`. Omitted fields are preserved; arrays replace their entire field. Provide official evidence and describe your relationship honestly. Anyone may propose corrections; a maker/team claim is not ownership verification.
+
+Checks rerun when an Issue is edited. A stale revision requires comparing your changes against the latest listing again. Updates require maintainer review, a draft PR and deployment; they never directly overwrite a live listing. Domain or repository migrations should be raised as a general Issue for a maintainer. The original listing stays live while an update is reviewed.
