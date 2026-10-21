@@ -10,8 +10,8 @@ export async function github(path, { token = process.env.GH_TOKEN, method = "GET
   if (!response.ok) throw new Error(`GitHub ${method} ${path.split("?")[0]} returned ${response.status}`);
   return response.status === 204 ? null : boundedJson(response);
 }
-export async function boundedJson(response) {
+export async function boundedJson(response, limit = 2_000_000) {
   let size = 0; const chunks = [];
-  for await (const chunk of response.body) { size += chunk.length; if (size > 2_000_000) throw new Error("Response exceeds 2 MB"); chunks.push(chunk); }
+  for await (const chunk of response.body) { size += chunk.length; if (size > limit) throw new Error(`Response exceeds ${limit / 1_000_000} MB`); chunks.push(chunk); }
   return JSON.parse(Buffer.concat(chunks).toString("utf8"));
 }

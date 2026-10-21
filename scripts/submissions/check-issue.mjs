@@ -21,7 +21,8 @@ export async function checkEvent(event, config, { api = github, fetchCatalog = f
       if (origin.protocol !== "https:" || origin.username || origin.password || origin.pathname !== "/") throw new Error("Configure an HTTPS site origin.");
       const response = await fetchCatalog(new URL(isUpdate ? "/projects.json" : "/catalog-index.json", origin), { redirect: "error", signal: AbortSignal.timeout(20000) });
       if (!response.ok) throw new Error("Published catalog is unavailable; retry the check later.");
-      const catalog = await boundedJson(response);
+      // The full catalog outgrew 2 MB in October 2026; allow room for growth.
+      const catalog = await boundedJson(response, isUpdate ? 16_000_000 : 2_000_000);
       if ((isUpdate ? catalog.schemaVersion : catalog.version) !== 1 || !Array.isArray(catalog.projects)) throw new Error("Published catalog format is invalid.");
       existing = catalog.projects;
       if (isUpdate) {
