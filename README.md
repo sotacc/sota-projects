@@ -39,9 +39,9 @@ You do not need to clone this repository, edit files, or open a pull request to 
 
 ## What happens next
 
-1. Automated checks validate the required fields, links, and public repository metadata when a repository is provided. Submitted websites are not automatically fetched.
-2. A maintainer assesses the project's purpose, evidence, and fit for the collection.
-3. Accepted candidates enter editorial review. Once a project is reviewed, published, and confirmed on the live site, its Issue receives a link and is closed.
+1. Opening, editing or reopening a product submission immediately requests automated review. GitHub Actions runner availability can affect the start time. Initial checks validate the fields and links; the reviewer separately reads official sources and checks the claims, tags and category.
+2. A passing review creates a candidate PR. The exact revision must pass site/content checks before automatic merge and deployment. Ambiguous evidence, unsupported details, screenshots or maker claims remain for maintainer review. Updates and release requests keep their separate review paths.
+3. After the deployed catalog is verified, `sotacc-bot` sends the standard publication receipt and closes the Issue. A failed review or deployment keeps the Issue open. A daily queue scan remains as recovery for missed events.
 
 Passing automated checks does not guarantee inclusion. Checks do not execute submitted code or verify project claims. Official project links and third-party evidence are reviewed separately.
 
@@ -49,7 +49,7 @@ Passing automated checks does not guarantee inclusion. Checks do not execute sub
 
 Open an Issue describing the affected project and the correction or suggestion. Project submissions belong in Issues, rather than code pull requests. This repository is the community intake for SOTA; it is not a downloadable catalog dataset.
 
-Browse the collection at **[sota.cc](https://sota.cc/)**. Accepted submissions remain open until editorial review and deployment are complete. Publication acknowledgements are currently handled by maintainers.
+Browse the collection at **[sota.cc](https://sota.cc/)**. Accepted submissions remain open until review, deployment and the standard Bot receipt are complete.
 
 ## What are these directories for?
 

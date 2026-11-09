@@ -1,0 +1,52 @@
+name: Request automatic project review
+on:
+  issues:
+    types: [opened, edited, reopened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Existing product Issue for a maintainer-triggered review or bridge check'
+        type: string
+        required: true
+permissions:
+  contents: read
+  issues: read
+concurrency:
+  group: request-review-${{ github.event.issue.number || inputs.issue_number }}
+  cancel-in-progress: false
+jobs:
+  request:
+    if: vars.SOTA_INSTANT_REVIEW_ENABLED == 'true' && !github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Only trusted default-branch code runs with the App key. No submitted code is executed.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: node --test tests/request-review.test.mjs
+      - name: Check current intake identity and state
+        id: intake
+        run: node scripts/submissions/request-review.mjs prepare
+        env:
+          INTAKE_TOKEN: ${{ github.token }}
+      - name: Create scoped review trigger token
+        id: trigger
+        if: steps.intake.outputs.ready == 'true'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        with:
+          app-id: ${{ vars.SOTA_BOT_APP_ID }}
+          private-key: ${{ secrets.SOTA_BOT_PRIVATE_KEY }}
+          owner: sotacc
+          repositories: sota-web
+          permission-actions: write
+      - name: Request review on the trusted website branch
+        if: steps.intake.outputs.ready == 'true'
+        run: node scripts/submissions/request-review.mjs
+        env:
+          INTAKE_TOKEN: ${{ github.token }}
+          REVIEW_TRIGGER_TOKEN: ${{ steps.trigger.outputs.token }}

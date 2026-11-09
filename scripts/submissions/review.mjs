@@ -1,6 +1,8 @@
 import { parseSubmission, repositoryName, websiteIdentity, projectWebsite } from "../../src/lib/submissions/core.mjs";
 import { github, bodyHash } from "./github.mjs";
 
+export const isProjectTitle = title => typeof title === "string" && /^(?:\[Project\](?:\s|$)|Submit project:\s*\S)/i.test(title);
+
 export function issueNumber(value) {
   if (!/^[1-9]\d*$/.test(String(value)) || !Number.isSafeInteger(Number(value))) throw new Error("A positive Issue number is required.");
   return Number(value);
